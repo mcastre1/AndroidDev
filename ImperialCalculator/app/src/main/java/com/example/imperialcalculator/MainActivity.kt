@@ -2,6 +2,7 @@ package com.example.imperialcalculator
 
 import android.graphics.drawable.shapes.OvalShape
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.updateTransition
@@ -17,8 +18,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +34,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.imperialcalculator.ui.theme.ImperialCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -66,16 +71,21 @@ fun MyApp(){
             modifier = Modifier
                 .fillMaxWidth()
                 .border(1.dp, MaterialTheme.colorScheme.primary, CutCornerShape(2.dp))
+                .weight(1f)
         ) {
-            Text(text = userInputOutput, modifier = Modifier.padding(5.dp))
+            Text(text = userInputOutput,
+                modifier = Modifier.padding(5.dp)
+                    .align(Alignment.BottomEnd), fontSize = 30.sp)
         }
         Divider(
-            thickness = 2.dp, color = Color.Black,
+            thickness = 1.dp, color = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 5.dp, top = 5.dp)
         )
-        UI(updatetext = {userInputOutput = it}, userInputOutput) // Send in lambda function to update text
+        Surface (modifier = Modifier.weight(3f)){
+            UI(updatetext = {userInputOutput = it}, userInputOutput) // Send in lambda function to update text
+        }
     }
 }
 
@@ -86,7 +96,7 @@ fun operation(updatetext: (String) -> Unit, operation: String, text: String){
     }else if(operation == "C"){
         updatetext("")
     }else if (operation in operators){
-        print("operator")
+        Log.d("Operator Given", operation)
     }
     else{
         updatetext(text + operation)
@@ -164,6 +174,26 @@ fun UI(updatetext: (String) -> Unit, text : String){
                 }
 
                 Divider(color = Color.Black, thickness = 2.dp)
+                Column (modifier = Modifier.fillMaxWidth()){
+                    Button(onClick = {operation(updatetext = updatetext, operation = "+", text = text)}, modifier = Modifier.fillMaxWidth()) {
+                        Text("+")
+                    }
+                    Button(onClick = {operation(updatetext = updatetext, operation = "-", text = text)}, modifier = Modifier.fillMaxWidth()) {
+                        Text(text = "-")
+                    }
+                    Button(onClick = {operation(updatetext = updatetext, operation = "x", text = text)}, modifier = Modifier.fillMaxWidth()) {
+                        Text(text="x")
+                    }
+                    Button(onClick = {operation(updatetext = updatetext, operation = "/", text = text)}, modifier = Modifier.fillMaxWidth()) {
+                        Text(text = "/")
+                    }
+                    Button(onClick = {operation(updatetext = updatetext, operation = "=", text = text)},
+                        modifier = Modifier.fillMaxWidth()
+                            .weight(2f), shape = RoundedCornerShape(15.dp)
+                    ) {
+                        Text(text = "=")
+                    }
+                }
             }
             Divider(color = Color.Black,
                 modifier = Modifier
