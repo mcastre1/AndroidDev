@@ -86,9 +86,28 @@ fun MyApp(){
 }
 
 var symbols = ArrayList<String>()
+val fractions = mapOf<String,String>(
+    "1/16" to "0.0625",
+    "1/8" to "0.125",
+    "3/16" to "0.1875",
+    "1/4" to "0.25",
+    "5/16" to "0.3125",
+    "3/8" to "0.375",
+    "7/16" to "0.4375",
+    "1/2" to "0.5",
+    "9/16" to "0.5625",
+    "5/8" to "0.625",
+    "11/16" to "0.6875",
+    "3/4" to "0.75",
+    "13/16" to "0.8125",
+    "7/8" to "0.875",
+    "15/16" to "0.9375",
+
+)
 // Function used to check what to do when a certain button is pressed
 fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
 
+    var result: Double = 0.0
     if (symbol == "Del"){
         if (symbols.isNotEmpty()){
             symbols.removeLast()
@@ -111,7 +130,7 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
                 }
             }
 
-            var result = DoubleEvaluator().evaluate(symbols.joinToString(" "))
+            result = DoubleEvaluator().evaluate(symbols.joinToString(""))
             Log.d("Evaluated!", result.toString())
         }
     }
@@ -131,8 +150,13 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
 
     }
 
-    var str = symbols.joinToString(" ")
-    updatetext(str)
+    if(result != 0.0){
+        updatetext(result.toString())
+    }else{
+        var str = symbols.joinToString(" ")
+        updatetext(str)
+    }
+
 }
 
 @Composable
