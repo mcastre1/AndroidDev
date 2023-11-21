@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val operators = listOf<String>("-", "+", "%", "x")
+val operators = listOf<String>("-", "+", "%", "x", "/")
 
 @Composable
 fun MyApp(){
@@ -134,8 +134,17 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
                     symbols[i] = "." + DoubleEvaluator().evaluate(symbols[i]).toString().split(".")[1]
                 }
             }
-
+            sanitize()
             result = DoubleEvaluator().evaluate(symbols.joinToString(""))
+
+            // Checking for division by 0
+            if(result.toString() == "Infinity"){
+                symbols.clear()
+                updatetext("SyntaxError")
+                return
+            }
+
+
         }
     }
     else{
@@ -174,6 +183,14 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
         updatetext(str)
     }
 
+}
+
+fun sanitize(){
+    if (symbols.last() in operators){
+        symbols.removeLast()
+    }
+
+    Log.d("symbols", symbols.toString())
 }
 
 // Convert decimal values into whole fractions, smallest would be sixteenths
