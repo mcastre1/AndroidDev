@@ -117,7 +117,12 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
     }else if (symbol in operators){
         if (symbols.isNotEmpty()){
             if(symbols.last() !in operators){
-                symbols.add(symbol)
+                if(symbol == "%"){
+                    symbols.add("/")
+                }else if(symbol == "x"){
+                    symbols.add("*")
+                }
+                else{symbols.add(symbol)}
             }
         }
         
@@ -125,13 +130,12 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
         Log.d("Evaluate", "Pressed equal button")
         if(symbols.isNotEmpty()){
             for(i in 0 until symbols.size){
-                if("/" in symbols[i]){
+                if("/" in symbols[i] && symbols[i].length > 1){
                     symbols[i] = "." + DoubleEvaluator().evaluate(symbols[i]).toString().split(".")[1]
                 }
             }
 
             result = DoubleEvaluator().evaluate(symbols.joinToString(""))
-            Log.d("Evaluated!", result.toString())
         }
     }
     else{
@@ -151,12 +155,52 @@ fun operation(updatetext: (String) -> Unit, symbol: String, text: String){
     }
 
     if(result != 0.0){
-        updatetext(result.toString())
+        var str_result = convert_decimal(result)
+        if (str_result.size > 0){
+            var temp = str_result.joinToString(" ")
+            updatetext(temp)
+            symbols.clear()
+            symbols = str_result
+        }else{
+            updatetext(result.toString())
+            symbols.clear()
+            symbols.add(result.toString())
+        }
+        Log.d("Str Result", str_result.toString())
+
+
     }else{
         var str = symbols.joinToString(" ")
         updatetext(str)
     }
 
+}
+
+// Convert decimal values into whole fractions, smallest would be sixteenths
+fun convert_decimal(result: Double): ArrayList<String>{
+   fractions.forEach{
+        entry ->
+       // Check if the result has a decimal point equal to the value in map.
+        if("0." + result.toString().split(".")[1] == entry.value.toString()){
+            var temp = ArrayList<String>()
+
+            //
+            if(result.toString().split(".")[0] != "0") {
+                temp.add(result.toString().split(".")[0])
+                temp.add(entry.key.toString())
+            }else{
+                temp.add(entry.key.toString())
+            }
+
+            return temp
+            // Remove decimal values when its only a 0
+        }else if(result.toString().split(".")[1] == "0"){
+            var temp = ArrayList<String>()
+            temp.add(result.toString().split(".")[0])
+            return temp
+        }
+    }
+    return ArrayList<String>()
 }
 
 @Composable
