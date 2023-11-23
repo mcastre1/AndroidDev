@@ -1,5 +1,6 @@
 package com.example.imperialcalculator
 
+import android.R
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +46,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.common.util.Hex
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -243,7 +247,9 @@ fun UI(updatetext: (String) -> Unit, text : String){
             Button(onClick = { operation(updatetext = updatetext, symbol = "C", text = text) }, modifier = Modifier.weight(2f)) {
                 Text(text = "Clear")
             }
-            Button(onClick = { operation(updatetext = updatetext, symbol = "Del", text = text)}, modifier = Modifier.weight(1f)) {
+
+            Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                , onClick = { operation(updatetext = updatetext, symbol = "Del", text = text)}, modifier = Modifier.weight(1f)) {
                 Text(text = "Del")
             }
         }
@@ -314,7 +320,8 @@ fun UI(updatetext: (String) -> Unit, text : String){
                     Button(onClick = {operation(updatetext = updatetext, symbol = "%", text = text)}, modifier = Modifier.fillMaxWidth()) {
                         Text(text = "%")
                     }
-                    Button(onClick = {operation(updatetext = updatetext, symbol = "=", text = text)},
+                    Button(colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.red_brown)),
+                        onClick = {operation(updatetext = updatetext, symbol = "=", text = text)},
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(2f), shape = RoundedCornerShape(15.dp)
